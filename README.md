@@ -1,6 +1,5 @@
 # Entornos-7.5
 
-## Fase 1: Análisis de Requisitos
 
 ### Tarea 1: Diagrama de Casos de Uso
 En este diagrama definimos los límites del sistema (`GymMasterSystem`) y la interacción de nuestros dos actores principales: el Socio (`Member`) y el Administrador (`Admin`). 
@@ -33,3 +32,42 @@ flowchart LR
     class GymMasterSystem system;
 ```
 
+
+### Tarea 2: Diagrama de Secuencia
+Nos centramos en el momento exacto en que un Socio pulsa el botón "Confirmar Reserva".
+* **Objetos**: Intervienen las entidades (`:Member`), (`:WebInterface`), (`:ReservationManager`) y (`:Database`).
+* **Flujo condicional**: Se utiliza un fragmento combinado `alt` para gestionar si la base de datos devuelve que hay disponibilidad o si, por el contrario, la clase está llena.
+
+```mermaid
+sequenceDiagram
+    actor M as :Member
+    participant WI as :WebInterface
+    participant RM as :ReservationManager
+    participant DB as :Database
+
+    M->>WI: clickConfirm()
+    activate WI
+    
+    WI->>RM: processReservation(memberId, classId)
+    activate RM
+    
+    RM->>DB: checkAvailability(classId)
+    activate DB
+    DB-->>RM: availabilityStatus
+    deactivate DB
+
+    alt isAvailable == true
+        RM->>DB: saveReservation(memberId, classId)
+        activate DB
+        DB-->>RM: confirmationOk
+        deactivate DB
+        RM-->>WI: reservationSuccess()
+        WI-->>M: showSuccessMessage()
+    else isAvailable == false
+        RM-->>WI: reservationFailed(fullCapacity)
+        WI-->>M: showWaitlistOption()
+    end
+    
+    deactivate RM
+    deactivate WI
+```
