@@ -132,3 +132,24 @@ flowchart TD
     classDef startNode fill:#000,stroke:#000,stroke-width:2px;
     classDef endNode fill:#fff,stroke:#000,stroke-width:4px;
 ```
+
+### Tarea 5: Diagrama de Estados
+Una reserva no es algo estático; cambia de estado según ocurren eventos.
+* **Estados obligatorios**: Pendiente (`Pending`), Confirmada (`Confirmed`), Cancelada (`Cancelled`), Realizada (`Completed`) y No Presentado (`NoShow`).
+* **Transiciones**: Indica qué eventos disparan las transiciones (ej: `confirm()`, `cancel()`, `checkIn()`).
+
+```mermaid
+stateDiagram-v2
+    [*] --> Pending : create()
+
+    Pending --> Confirmed : confirm()
+    Pending --> Cancelled : cancel()
+
+    Confirmed --> Cancelled : cancel()
+    Confirmed --> Completed : checkIn()
+    Confirmed --> NoShow : missClass()
+
+    Cancelled --> [*]
+    Completed --> [*]
+    NoShow --> [*]
+```
