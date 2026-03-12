@@ -95,3 +95,40 @@ flowchart LR
     RM -. "1.1.2b: [!isAvailable] rejectReservation()" .-> WI
     WI -. "1.2b: showWaitlist()" .-> M
 ```
+
+### Tarea 4: Diagrama de Actividades
+Antes de confirmar la reserva, el gimnasio sigue un protocolo interno de seguridad y pagos.
+* **Pasos**: 1. Recibir solicitud -> 2. ¿Socio tiene cuota pagada? (Decisión) -> 3. ¿Hay aforo? (Decisión) -> 4. Bloquear plaza -> 5. Enviar email de confirmación.
+* **Símbolos**: Usa correctamente los símbolos de inicio, fin, acciones y rombos de decisión.
+
+```mermaid
+flowchart TD
+    Start(( )):::startNode
+    End(( )):::endNode
+    End2(( )):::endNode
+    End3(( )):::endNode
+
+    Step1[1. Receive Request]
+    Step4[4. Block Spot]
+    Step5[5. Send Confirmation Email]
+    Reject[Reject: Unpaid Quota]
+    Waitlist[Offer Waitlist]
+
+    Dec2{2. Is Quota Paid?}
+    Dec3{3. Has Capacity?}
+
+    Start --> Step1
+    Step1 --> Dec2
+    
+    Dec2 -- "[yes]" --> Dec3
+    Dec2 -- "[no]" --> Reject --> End2
+    
+    Dec3 -- "[yes]" --> Step4
+    Dec3 -- "[no]" --> Waitlist --> End3
+    
+    Step4 --> Step5
+    Step5 --> End
+
+    classDef startNode fill:#000,stroke:#000,stroke-width:2px;
+    classDef endNode fill:#fff,stroke:#000,stroke-width:4px;
+```
