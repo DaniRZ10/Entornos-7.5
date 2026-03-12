@@ -71,3 +71,27 @@ sequenceDiagram
     deactivate RM
     deactivate WI
 ```
+
+
+### Tarea 3: Diagrama de Comunicación
+Muestra la misma interacción pero enfocada en los enlaces entre objetos.
+* **Numeración decimal**: Utiliza correctamente la numeración decimal (`1`, `1.1`, `1.1.1`...) para el orden de los mensajes.
+* **Condicionales**: Se usan corchetes (`[isAvailable]`) para indicar las guardas lógicas de las alternativas.
+
+```mermaid
+flowchart LR
+    M((:Member))
+    WI[:WebInterface]
+    RM[:ReservationManager]
+    DB[(:Database)]
+
+    M -- "1: clickConfirm()" --> WI
+    WI -- "1.1: processReservation()" --> RM
+    RM -- "1.1.1: checkAvailability()" --> DB
+    RM -- "1.1.2: [isAvailable] saveReservation()" --> DB
+    RM -- "1.1.3: confirmReservation()" --> WI
+    WI -- "1.2: showSuccessMessage()" --> M
+    
+    RM -. "1.1.2b: [!isAvailable] rejectReservation()" .-> WI
+    WI -. "1.2b: showWaitlist()" .-> M
+```
